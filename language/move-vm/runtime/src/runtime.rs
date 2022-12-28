@@ -280,7 +280,7 @@ impl VMRuntime {
             _ => (ty, value),
         };
 
-        let layout = self.loader.type_to_type_layout(ty).map_err(|_err| {
+        let layout = self.loader.type_to_fully_annotated_layout(ty).map_err(|_err| {
             PartialVMError::new(StatusCode::VERIFICATION_ERROR).with_message(
                 "entry point functions cannot have non-serializable return types".to_string(),
             )
