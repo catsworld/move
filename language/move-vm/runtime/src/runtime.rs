@@ -285,11 +285,20 @@ impl VMRuntime {
                 "entry point functions cannot have non-serializable return types".to_string(),
             )
         })?;
+
         let bytes = value.simple_serialize(&layout).ok_or_else(|| {
             PartialVMError::new(StatusCode::UNKNOWN_INVARIANT_VIOLATION_ERROR)
                 .with_message("failed to serialize return values".to_string())
         })?;
-        Ok((bytes, layout))
+
+        // INITIA CUSTOM
+        let layout_for_return = self.loader.type_to_fully_annotated_layout(ty).map_err(|_err| {
+            PartialVMError::new(StatusCode::VERIFICATION_ERROR).with_message(
+                "entry point functions cannot have non-serializable return types".to_string(),
+            )
+        })?;
+
+        Ok((bytes, layout_for_return))
     }
 
     fn serialize_return_values(
