@@ -9,9 +9,10 @@ use crate::{
 };
 use anyhow::{bail, Result};
 use std::collections::btree_map::{self, BTreeMap};
+use serde::{Deserialize, Serialize};
 
 /// A storage operation.
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub enum Op<T> {
     /// Inserts some new data into an empty slot.
     New(T),
@@ -56,7 +57,7 @@ impl<T> Op<T> {
 }
 
 /// A collection of resource and module operations on a Move account.
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub struct AccountChangeSet {
     modules: BTreeMap<Identifier, Op<Vec<u8>>>,
     resources: BTreeMap<StructTag, Op<Vec<u8>>>,
@@ -191,7 +192,7 @@ impl AccountChangeSet {
 
 /// A collection of changes to a Move state. Each AccountChangeSet in the domain of `accounts`
 /// is guaranteed to be nonempty
-#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub struct ChangeSet {
     accounts: BTreeMap<AccountAddress, AccountChangeSet>,
 }
